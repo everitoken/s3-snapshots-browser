@@ -125,8 +125,10 @@ function init() {
 }
 
 function runS3Browser() {
-	AWS.config.region = AWS_Region;
-	AWS.config.update({accessKeyId: AWS_AccessKeyId, secretAccessKey: AWS_SecretAccessKey});
+    AWS.config.region = AWS_Region;
+    if(AWS_AccessKeyId && AWS_SecretAccessKey) {
+        AWS.config.update({accessKeyId: AWS_AccessKeyId, secretAccessKey: AWS_SecretAccessKey});
+    }
 	bucket = new AWS.S3({params: {Bucket: AWS_BucketName}});
 	listObjects(AWS_Prefix);
 }
@@ -164,11 +166,5 @@ function login() {
 
 $(document).ready(function() {
 	init();
-
-	// if keys are not available from config then ask user to provide those
-	if (!AWS_SecretAccessKey) {
-		showLoginForm();
-	} else {
-		runS3Browser();
-	}
+    runS3Browser();
 });
